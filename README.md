@@ -114,5 +114,7 @@ backend/
 
 ## License
 
-ISC
+This project is licensed under the ISC License - see the [LICENSE](LICENSE) file for details.
+
+Copyright (c) 2025
 
