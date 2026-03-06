@@ -31,7 +31,7 @@ describe("Auth Routes Tests", () => {
     it("should register a new user successfully", async () => {
       // Mock that user doesn't exist
       userModel.findOne.mockResolvedValue(null);
-      
+
       // Mock user creation
       const mockUser = {
         _id: "userId123",
@@ -39,13 +39,15 @@ describe("Auth Routes Tests", () => {
         email: validUser.email,
         password: "hashedpassword",
       };
-      
+
       // Mock bcrypt hash
-      jest.spyOn(require("bcryptjs"), "hash").mockResolvedValue("hashedpassword");
-      
+      jest
+        .spyOn(require("bcryptjs"), "hash")
+        .mockResolvedValue("hashedpassword");
+
       // Mock jwt sign
       jest.spyOn(require("jsonwebtoken"), "sign").mockReturnValue("mockToken");
-      
+
       // Mock userModel.create
       userModel.create.mockResolvedValue(mockUser);
 
@@ -98,7 +100,9 @@ describe("Auth Routes Tests", () => {
         .send(validUser);
 
       expect(response.status).toBe(400);
-      expect(response.body.message).toBe("User already exists with this username or email");
+      expect(response.body.message).toBe(
+        "User already exists with this username or email",
+      );
     });
   });
 
@@ -117,10 +121,10 @@ describe("Auth Routes Tests", () => {
       };
 
       userModel.findOne.mockResolvedValue(mockUser);
-      
+
       // Mock bcrypt compare
       jest.spyOn(require("bcryptjs"), "compare").mockResolvedValue(true);
-      
+
       // Mock jwt sign
       jest.spyOn(require("jsonwebtoken"), "sign").mockReturnValue("mockToken");
 
@@ -167,7 +171,7 @@ describe("Auth Routes Tests", () => {
       };
 
       userModel.findOne.mockResolvedValue(mockUser);
-      
+
       // Mock bcrypt compare to return false (invalid password)
       jest.spyOn(require("bcryptjs"), "compare").mockResolvedValue(false);
 
@@ -180,4 +184,3 @@ describe("Auth Routes Tests", () => {
     });
   });
 });
-
