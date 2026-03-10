@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const tokenBlacklistModel = require("../src/models/blacklist.model");
-const authUser = require("../src/middlewares/auth.middleware");
+const { authUser } = require("../src/middlewares/auth.middleware");
 
 // Mock the dependencies
 jest.mock("jsonwebtoken");
@@ -24,15 +24,15 @@ describe("Auth Middleware Tests", () => {
     };
     next = jest.fn();
 
-    // Set a dummy JWT_SECRET
-    process.env.JWT_SECRET = "testsecret";
+    // Set a dummy JWT_SECRET_KEY
+    process.env.JWT_SECRET_KEY = "testsecret";
   });
 
   it("should return 401 if no token is provided", async () => {
     await authUser(req, res, next);
 
     expect(res.status).toHaveBeenCalledWith(401);
-    expect(res.json).toHaveBeenCalledWith({ message: "Unauthorized" });
+    expect(res.json).toHaveBeenCalledWith({ message: "Token not provided." });
     expect(next).not.toHaveBeenCalled();
   });
 
@@ -50,7 +50,7 @@ describe("Auth Middleware Tests", () => {
       token: "blacklistedToken",
     });
     expect(res.status).toHaveBeenCalledWith(401);
-    expect(res.json).toHaveBeenCalledWith({ message: "Token is invalid" });
+    expect(res.json).toHaveBeenCalledWith({ message: "token is invalid" });
     expect(next).not.toHaveBeenCalled();
   });
 
@@ -72,7 +72,7 @@ describe("Auth Middleware Tests", () => {
     });
     expect(jwt.verify).toHaveBeenCalledWith("invalidToken", "testsecret");
     expect(res.status).toHaveBeenCalledWith(401);
-    expect(res.json).toHaveBeenCalledWith({ message: "Invalid token" });
+    expect(res.json).toHaveBeenCalledWith({ message: "Invalid token." });
     expect(next).not.toHaveBeenCalled();
   });
 
