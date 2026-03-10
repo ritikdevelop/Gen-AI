@@ -58,7 +58,7 @@ describe("Auth Routes Tests", () => {
       expect(response.status).toBe(201);
       expect(response.body.message).toBe("User registered successfully");
       expect(response.body.user).toBeDefined();
-      expect(response.body.token).toBeDefined();
+      expect(response.headers['set-cookie']).toBeDefined();
     });
 
     it("should return 400 if username is missing", async () => {
@@ -67,7 +67,7 @@ describe("Auth Routes Tests", () => {
         .send({ email: "test@example.com", password: "password123" });
 
       expect(response.status).toBe(400);
-      expect(response.body.message).toBe("All fields are required");
+      expect(response.body.message).toBe("Please provide username, email and password");
     });
 
     it("should return 400 if email is missing", async () => {
@@ -76,7 +76,7 @@ describe("Auth Routes Tests", () => {
         .send({ username: "testuser", password: "password123" });
 
       expect(response.status).toBe(400);
-      expect(response.body.message).toBe("All fields are required");
+      expect(response.body.message).toBe("Please provide username, email and password");
     });
 
     it("should return 400 if password is missing", async () => {
@@ -85,7 +85,7 @@ describe("Auth Routes Tests", () => {
         .send({ username: "testuser", email: "test@example.com" });
 
       expect(response.status).toBe(400);
-      expect(response.body.message).toBe("All fields are required");
+      expect(response.body.message).toBe("Please provide username, email and password");
     });
 
     it("should return 400 if user already exists", async () => {
@@ -101,7 +101,7 @@ describe("Auth Routes Tests", () => {
 
       expect(response.status).toBe(400);
       expect(response.body.message).toBe(
-        "User already exists with this username or email",
+        "Account already exists with this email address or username",
       );
     });
   });
@@ -133,9 +133,9 @@ describe("Auth Routes Tests", () => {
         .send(validLogin);
 
       expect(response.status).toBe(200);
-      expect(response.body.message).toBe("User logged in successfully");
+      expect(response.body.message).toBe("User loggedIn successfully.");
       expect(response.body.user).toBeDefined();
-      expect(response.body.token).toBeDefined();
+      expect(response.headers['set-cookie']).toBeDefined();
     });
 
     it("should return 400 if email is missing", async () => {
